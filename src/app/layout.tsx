@@ -1,16 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import NavBar from "./components/navbar";
 import Footer from "./components/footer";
+import { BookingProvider } from "./components/booking/booking-context";
+import AOSInit from "./components/aos-init";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
 });
 
@@ -26,12 +23,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <NavBar />
-        <main className="overflow-x-hidden">{children}</main>
-        <Footer />
+      <body className={`${spaceGrotesk.variable} antialiased`}>
+        <AOSInit />
+        <BookingProvider>
+          <NavBar />
+          <main className="overflow-x-hidden">{children}</main>
+          <Footer />
+        </BookingProvider>
       </body>
     </html>
   );

@@ -3,41 +3,46 @@ import Header from "./header";
 
 const testimonials = [
   {
-    quote: "they work very fast and professionally .",
+    quote: "They work very fast and professionally.",
     name: "Sarah Chen",
-    designation: "",
+    designation: "Almere",
+    rating: 5,
     src: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
-    quote: "Reliable,Fast and Keep to time  .",
+    quote: "Reliable, fast and keep to time.",
     name: "Michael Rodriguez",
-    designation: "",
+    designation: "Amsterdam",
+    rating: 5,
     src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     quote: "Deliver in time and keep to time.",
     name: "Emily Watson",
-    designation: "",
+    designation: "Hilversum",
+    rating: 4,
     src: "https://images.unsplash.com/photo-1623582854588-d60de57fa33f?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     quote: "Cheaper and keep to time.",
     name: "James Kim",
-    designation: "",
+    designation: "Lelystad",
+    rating: 5,
     src: "https://images.unsplash.com/photo-1636041293178-808a6762ab39?q=80&w=3464&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     quote:
-      "The scalability and performance have been game-changing for our organization. Highly recommend to any growing business.",
+      "The whole experience was seamless. The crew was efficient and looked after every item.",
     name: "Lisa Thompson",
-    designation: "VP of Technology at FutureNet",
+    designation: "Amersfoort",
+    rating: 5,
     src: "https://images.unsplash.com/photo-1624561172888-ac93c696e10c?q=80&w=2592&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
 ];
 
 export default function Review() {
   return (
-    <section id="testimonials">
+    <section id="testimonials" className="py-12" data-aos="fade-up">
       <Header title="Customer Reviews" />
       <AnimatedTestimonials testimonials={testimonials} />
     </section>

@@ -1,13 +1,15 @@
 type HeaderProps = {
   title: string;
+  subtitle?: string;
 };
 
-export default function Header({ title }: HeaderProps) {
+export default function Header({ title, subtitle }: HeaderProps) {
   return (
-    <div className="my-20 mt-40">
-      <h1 className="text-2xl lg:text-3xl font-bold text-center py-5 text-red-500">
-        {title}
-      </h1>
+    <div className="mx-auto mb-12 max-w-2xl text-center">
+      <h2 className="text-3xl font-bold sm:text-4xl">{title}</h2>
+      {subtitle && (
+        <p className="mt-3 text-[var(--color-ink-muted)]">{subtitle}</p>
+      )}
     </div>
   );
 }

@@ -1,31 +1,46 @@
 import Link from "next/link";
 import Review from "./components/review";
+import Services from "./components/services";
+import BookButton from "./components/booking/book-button";
 
-export default function Hero() {
+export default function Home() {
   return (
-    <section className="bg-black text-white grid md:flex  flex-col justify-center py-16 px-6">
-      <div className=" container mx-auto flex  flex-col sm:grid md:flex md:flex-row   items-center justify-between gap-10 ">
-        <div className="flex flex-col space-y-6 text-center items-center md:items-start md:text-left max-w-lg">
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold">
-            MOVINGPACE
+    <>
+      {/* Hero */}
+      <section className="container mx-auto flex flex-col-reverse items-center justify-between gap-12 px-6 py-16 md:flex-row md:py-24">
+        <div
+          className="flex max-w-xl flex-col items-center text-center md:items-start md:text-left"
+          data-aos="fade-up"
+        >
+          <h1 className="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            Move your home{" "}
+            <span className="bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-accent-strong)] bg-clip-text text-transparent">
+              with pace
+            </span>
           </h1>
-          <p className="text-base sm:text-lg lg:text-xl leading-relaxed">
-            Success in logistics is not just about on-time delivery, but also
-            ensuring operational costs remain efficient
+          <p className="mt-6 text-lg leading-relaxed text-[var(--color-ink-muted)]">
+            Success in logistics isn&apos;t just about on-time delivery — it&apos;s
+            about doing it safely, reliably and at a fair price. Let us carry
+            your load from one home to the next.
           </p>
-          <button className="bg-red-500 hover:bg-red-600 text-white w-[130px] h-[45px] flex items-center justify-center rounded-2xl font-medium transition ">
-            <Link href="/contact" className="text-center">
-              Reach Us
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <BookButton />
+            <Link href="/pricing" className="btn-ghost">
+              View Pricing
             </Link>
-          </button>
+          </div>
         </div>
         <img
           src="/images/bus1.png"
-          alt="Moving Pace transportation bus"
-          className="w-64 sm:w-80 md:w-[400px] lg:w-[500px] xl:w-[600px]"
+          alt="MovingPace transportation bus"
+          className="w-72 sm:w-96 md:w-[440px] lg:w-[540px]"
+          data-aos="fade-left"
         />
-      </div>
+      </section>
+
+      <Services />
+
       <Review />
-    </section>
+    </>
   );
 }

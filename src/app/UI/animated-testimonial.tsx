@@ -4,11 +4,13 @@ import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "motion/react";
 
 import { useEffect, useState } from "react";
+import StarRating from "../components/star-rating";
 
 type Testimonial = {
   quote: string;
   name: string;
   designation: string;
+  rating: number;
   src: string;
 };
 export const AnimatedTestimonials = ({
@@ -115,13 +117,16 @@ export const AnimatedTestimonials = ({
               ease: "easeInOut",
             }}
           >
-            <h3 className="text-2xl font-bold text-black dark:text-white">
+            <div className="mb-4">
+              <StarRating rating={testimonials[active].rating} size={20} />
+            </div>
+            <h3 className="text-2xl font-bold text-[var(--color-ink)]">
               {testimonials[active].name}
             </h3>
-            <p className="text-sm text-gray-500 dark:text-neutral-500">
+            <p className="text-sm text-[var(--color-ink-subtle)]">
               {testimonials[active].designation}
             </p>
-            <motion.p className="mt-8 text-lg text-gray-500 dark:text-neutral-300">
+            <motion.p className="mt-8 text-lg text-[var(--color-ink-muted)]">
               {testimonials[active].quote.split(" ").map((word, index) => (
                 <motion.span
                   key={index}
@@ -150,15 +155,17 @@ export const AnimatedTestimonials = ({
           <div className="flex gap-4 pt-12 md:pt-0">
             <button
               onClick={handlePrev}
-              className="group/button flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800"
+              aria-label="Previous review"
+              className="group/button flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-surface-2)] transition hover:bg-[var(--color-elevated)]"
             >
-              <IconArrowLeft className="h-5 w-5 text-black transition-transform duration-300 group-hover/button:rotate-12 dark:text-neutral-400" />
+              <IconArrowLeft className="h-5 w-5 text-[var(--color-ink-muted)] transition-transform duration-300 group-hover/button:rotate-12" />
             </button>
             <button
               onClick={handleNext}
-              className="group/button flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800"
+              aria-label="Next review"
+              className="group/button flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-surface-2)] transition hover:bg-[var(--color-elevated)]"
             >
-              <IconArrowRight className="h-5 w-5 text-black transition-transform duration-300 group-hover/button:-rotate-12 dark:text-neutral-400" />
+              <IconArrowRight className="h-5 w-5 text-[var(--color-ink-muted)] transition-transform duration-300 group-hover/button:-rotate-12" />
             </button>
           </div>
         </div>
