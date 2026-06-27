@@ -14,6 +14,7 @@ import {
   IconBrandWhatsapp,
 } from "@tabler/icons-react";
 import { serviceCities } from "../../lib/pricing";
+import { createBooking } from "./actions";
 
 type Step = "date" | "time" | "form" | "success";
 
@@ -63,6 +64,8 @@ export default function BookingModal({
   const [date, setDate] = useState<Date | undefined>();
   const [time, setTime] = useState<string>("");
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   // Reset everything when the modal is reopened.
   useEffect(() => {
@@ -71,6 +74,8 @@ export default function BookingModal({
       setDate(undefined);
       setTime("");
       setForm(EMPTY_FORM);
+      setSubmitting(false);
+      setSubmitError("");
     }
   }, [open]);
 
@@ -116,11 +121,31 @@ export default function BookingModal({
     toOutOfRegion && form.toOther.trim(),
   ].filter(Boolean);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formValid) return;
-    // UI-only: success email is wired up in the backend phase.
-    setStep("success");
+    if (!formValid || submitting) return;
+
+    setSubmitting(true);
+    setSubmitError("");
+
+    const result = await createBooking({
+      name: form.name.trim(),
+      phone: form.phone.trim(),
+      email: form.email.trim(),
+      fromCity: fromResolved,
+      toCity: toResolved,
+      moveDate: date ? format(date, "yyyy-MM-dd") : "",
+      moveTime: time,
+      outOfRegion,
+    });
+
+    setSubmitting(false);
+
+    if (result.ok) {
+      setStep("success");
+    } else {
+      setSubmitError(result.error);
+    }
   };
 
   const stepIndex = { date: 0, time: 1, form: 2, success: 3 }[step];
@@ -349,14 +374,21 @@ export default function BookingModal({
         {/* Footer */}
         <div className="border-t border-[var(--color-line)] px-6 py-4">
           {step === "form" && (
-            <button
-              type="submit"
-              form="booking-form"
-              disabled={!formValid}
-              className="btn-accent w-full disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Confirm booking
-            </button>
+            <>
+              {submitError && (
+                <p className="mb-3 text-center text-sm text-[var(--color-accent)]">
+                  {submitError}
+                </p>
+              )}
+              <button
+                type="submit"
+                form="booking-form"
+                disabled={!formValid || submitting}
+                className="btn-accent w-full disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {submitting ? "Sending…" : "Confirm booking"}
+              </button>
+            </>
           )}
           {step === "success" && (
             <button onClick={onClose} className="btn-accent w-full">
