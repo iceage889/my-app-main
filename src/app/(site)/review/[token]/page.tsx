@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { createServiceClient } from "../../../lib/supabase/server";
 import ReviewForm from "./review-form";
+
+export const metadata: Metadata = {
+  title: "Leave a Review",
+  robots: { index: false, follow: false },
+};
 
 type PageState = "form" | "invalid" | "expired" | "used";
 

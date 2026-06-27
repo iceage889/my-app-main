@@ -20,7 +20,7 @@ export default function Footer() {
         {/* Brand */}
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <img src="/images/Logo.png" alt="MovingPace logo" className="w-9" />
+            <img src="/images/logo-mark.svg" alt="MovingPace logo" className="w-9" />
             <span className="text-lg font-bold">MovingPace</span>
           </div>
           <p className="text-sm leading-relaxed text-[var(--color-ink-muted)]">

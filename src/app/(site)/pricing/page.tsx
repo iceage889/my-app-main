@@ -4,7 +4,7 @@ import { zonePrices, extraServices } from "../../lib/pricing";
 import BookButton from "../../components/booking/book-button";
 
 export const metadata: Metadata = {
-  title: "Pricing | MovingPace",
+  title: "Pricing & Rates",
   description:
     "Transparent, zone-based hourly rates and extra services for moving across Almere, Amsterdam and surrounding areas. All prices exclude 21% BTW.",
 };

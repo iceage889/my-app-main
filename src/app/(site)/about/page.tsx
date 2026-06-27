@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Review from "../../components/review";
 import BookButton from "../../components/booking/book-button";
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description:
+    "MovingPace provides reliable, efficient relocation across Almere, Amsterdam and surrounding areas — moving your belongings safely, with care and honesty.",
+};
 
 export default function About() {
   return (

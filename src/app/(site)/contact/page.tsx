@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   IconPhone,
   IconMail,
@@ -5,6 +6,12 @@ import {
 } from "@tabler/icons-react";
 import Review from "../../components/review";
 import BookButton from "../../components/booking/book-button";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description:
+    "Get in touch with MovingPace by phone, WhatsApp or email — or book your move online. Serving Almere, Amsterdam and surrounding areas.",
+};
 
 export default function Contact() {
   return (
