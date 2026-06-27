@@ -11,8 +11,18 @@ type Testimonial = {
   name: string;
   designation: string;
   rating: number;
-  src: string;
+  src?: string;
 };
+
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((part) => part[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
 export const AnimatedTestimonials = ({
   testimonials,
   autoplay = false,
@@ -55,7 +65,7 @@ export const AnimatedTestimonials = ({
             <AnimatePresence>
               {testimonials.map((testimonial, index) => (
                 <motion.div
-                  key={testimonial.src}
+                  key={`${testimonial.name}-${index}`}
                   initial={{
                     opacity: 0,
                     scale: 0.9,
@@ -84,14 +94,22 @@ export const AnimatedTestimonials = ({
                   }}
                   className="absolute inset-0 origin-bottom"
                 >
-                  <img
-                    src={testimonial.src}
-                    alt={testimonial.name}
-                    width={500}
-                    height={500}
-                    draggable={false}
-                    className="h-full w-full rounded-3xl object-cover object-center"
-                  />
+                  {testimonial.src ? (
+                    <img
+                      src={testimonial.src}
+                      alt={testimonial.name}
+                      width={500}
+                      height={500}
+                      draggable={false}
+                      className="h-full w-full rounded-3xl object-cover object-center"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center rounded-3xl bg-[var(--color-surface-2)]">
+                      <span className="text-6xl font-bold text-[var(--color-accent)]">
+                        {getInitials(testimonial.name)}
+                      </span>
+                    </div>
+                  )}
                 </motion.div>
               ))}
             </AnimatePresence>
