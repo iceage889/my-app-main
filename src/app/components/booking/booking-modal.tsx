@@ -10,10 +10,15 @@ import {
   IconCheck,
   IconCalendar,
   IconClock,
+  IconAlertTriangle,
+  IconBrandWhatsapp,
 } from "@tabler/icons-react";
 import { serviceCities } from "../../lib/pricing";
 
 type Step = "date" | "time" | "form" | "success";
+
+const OTHER = "Other";
+const WHATSAPP_NUMBER = "31681059122";
 
 // Mocked availability — replaced with backend data later.
 const TIME_SLOTS = [
@@ -31,10 +36,21 @@ type FormState = {
   name: string;
   phone: string;
   email: string;
-  location: string;
+  fromCity: string;
+  fromOther: string;
+  toCity: string;
+  toOther: string;
 };
 
-const EMPTY_FORM: FormState = { name: "", phone: "", email: "", location: "" };
+const EMPTY_FORM: FormState = {
+  name: "",
+  phone: "",
+  email: "",
+  fromCity: "",
+  fromOther: "",
+  toCity: "",
+  toOther: "",
+};
 
 export default function BookingModal({
   open,
@@ -70,11 +86,35 @@ export default function BookingModal({
 
   if (!open) return null;
 
+  // Resolve the chosen city ("Other" uses the typed value).
+  const fromResolved =
+    form.fromCity === OTHER ? form.fromOther.trim() : form.fromCity;
+  const toResolved = form.toCity === OTHER ? form.toOther.trim() : form.toCity;
+
+  const fromOutOfRegion = form.fromCity === OTHER;
+  const toOutOfRegion = form.toCity === OTHER;
+  const outOfRegion = fromOutOfRegion || toOutOfRegion;
+
   const formValid =
     form.name.trim() &&
     form.phone.trim() &&
     form.email.trim() &&
-    form.location;
+    fromResolved &&
+    toResolved;
+
+  // Pre-filled WhatsApp message for out-of-region requests.
+  const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+    `Hi MovingPace, I'd like a move from ${fromResolved || "?"} to ${
+      toResolved || "?"
+    }${date ? ` on ${format(date, "d MMM yyyy")}` : ""}${
+      time ? ` at ${time}` : ""
+    }. One of these is outside your listed area — can you help?`
+  )}`;
+
+  const outOfRegionCities = [
+    fromOutOfRegion && form.fromOther.trim(),
+    toOutOfRegion && form.toOther.trim(),
+  ].filter(Boolean);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,11 +134,11 @@ export default function BookingModal({
       aria-label="Book a move"
     >
       <div
-        className="card relative flex max-h-[92vh] w-full max-w-lg flex-col overflow-hidden rounded-b-none rounded-t-2xl sm:rounded-2xl"
+        className="card relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-b-none rounded-t-2xl sm:rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[var(--color-line)] px-5 py-4">
+        <div className="flex items-center justify-between border-b border-[var(--color-line)] px-6 py-4">
           <div className="flex items-center gap-2">
             {step !== "date" && step !== "success" && (
               <button
@@ -127,7 +167,7 @@ export default function BookingModal({
 
         {/* Progress */}
         {step !== "success" && (
-          <div className="flex gap-1.5 px-5 pt-4">
+          <div className="flex gap-1.5 px-6 pt-4">
             {[0, 1, 2].map((i) => (
               <div
                 key={i}
@@ -144,7 +184,7 @@ export default function BookingModal({
         )}
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto px-5 py-5">
+        <div className="flex-1 overflow-y-auto px-6 py-5">
           {step === "date" && (
             <div className="flex flex-col items-center">
               <DayPicker
@@ -200,6 +240,57 @@ export default function BookingModal({
                 </span>
               </div>
 
+              {/* From / To */}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <CityField
+                  label="Moving from"
+                  selectValue={form.fromCity}
+                  otherValue={form.fromOther}
+                  onSelect={(v) => setForm({ ...form, fromCity: v })}
+                  onOther={(v) => setForm({ ...form, fromOther: v })}
+                />
+                <CityField
+                  label="Moving to"
+                  selectValue={form.toCity}
+                  otherValue={form.toOther}
+                  onSelect={(v) => setForm({ ...form, toCity: v })}
+                  onOther={(v) => setForm({ ...form, toOther: v })}
+                />
+              </div>
+
+              {/* Out-of-region notice */}
+              {outOfRegion && (
+                <div className="rounded-xl border border-[var(--color-accent)] bg-[var(--color-accent-soft)] p-4">
+                  <div className="flex items-start gap-2.5">
+                    <IconAlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-[var(--color-accent)]" />
+                    <p className="text-sm text-[var(--color-ink)]">
+                      {outOfRegionCities.length > 0 ? (
+                        <>
+                          We don&apos;t currently list{" "}
+                          <span className="font-semibold">
+                            {outOfRegionCities.join(" and ")}
+                          </span>{" "}
+                          in our service area.
+                        </>
+                      ) : (
+                        <>That location is outside our usual service area.</>
+                      )}{" "}
+                      Message us on WhatsApp and we&apos;ll see what we can do —
+                      or send the request below anyway.
+                    </p>
+                  </div>
+                  <a
+                    href={whatsappHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white transition hover:brightness-105"
+                  >
+                    <IconBrandWhatsapp className="h-5 w-5" />
+                    Contact us on WhatsApp
+                  </a>
+                </div>
+              )}
+
               <Field label="Full name">
                 <input
                   type="text"
@@ -232,26 +323,6 @@ export default function BookingModal({
                   placeholder="you@example.com"
                 />
               </Field>
-
-              <Field label="Location">
-                <select
-                  required
-                  value={form.location}
-                  onChange={(e) =>
-                    setForm({ ...form, location: e.target.value })
-                  }
-                  className={inputClass}
-                >
-                  <option value="" disabled>
-                    Select your city
-                  </option>
-                  {serviceCities.map((city) => (
-                    <option key={city} value={city}>
-                      {city}
-                    </option>
-                  ))}
-                </select>
-              </Field>
             </form>
           )}
 
@@ -261,12 +332,14 @@ export default function BookingModal({
                 <IconCheck className="h-8 w-8 text-[var(--color-accent)]" />
               </div>
               <h3 className="text-xl font-bold">Thank you, {form.name}!</h3>
-              <p className="mt-2 max-w-xs text-sm text-[var(--color-ink-muted)]">
-                Your move is requested for{" "}
+              <p className="mt-2 max-w-sm text-sm text-[var(--color-ink-muted)]">
+                Your move is requested from{" "}
+                <span className="text-[var(--color-ink)]">{fromResolved}</span> to{" "}
+                <span className="text-[var(--color-ink)]">{toResolved}</span> on{" "}
                 <span className="text-[var(--color-ink)]">
                   {date ? format(date, "d MMM yyyy") : ""} at {time}
-                </span>{" "}
-                in {form.location}. A confirmation email is on its way to{" "}
+                </span>
+                . A confirmation email is on its way to{" "}
                 <span className="text-[var(--color-ink)]">{form.email}</span>.
               </p>
             </div>
@@ -274,7 +347,7 @@ export default function BookingModal({
         </div>
 
         {/* Footer */}
-        <div className="border-t border-[var(--color-line)] px-5 py-4">
+        <div className="border-t border-[var(--color-line)] px-6 py-4">
           {step === "form" && (
             <button
               type="submit"
@@ -318,5 +391,50 @@ function Field({
       </span>
       {children}
     </label>
+  );
+}
+
+function CityField({
+  label,
+  selectValue,
+  otherValue,
+  onSelect,
+  onOther,
+}: {
+  label: string;
+  selectValue: string;
+  otherValue: string;
+  onSelect: (value: string) => void;
+  onOther: (value: string) => void;
+}) {
+  return (
+    <Field label={label}>
+      <select
+        required
+        value={selectValue}
+        onChange={(e) => onSelect(e.target.value)}
+        className={inputClass}
+      >
+        <option value="" disabled>
+          Select a city
+        </option>
+        {serviceCities.map((city) => (
+          <option key={city} value={city}>
+            {city}
+          </option>
+        ))}
+        <option value={OTHER}>Other (outside these areas)</option>
+      </select>
+      {selectValue === OTHER && (
+        <input
+          type="text"
+          required
+          value={otherValue}
+          onChange={(e) => onOther(e.target.value)}
+          className={`${inputClass} mt-2`}
+          placeholder="Type the city name"
+        />
+      )}
+    </Field>
   );
 }
