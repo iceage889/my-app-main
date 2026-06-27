@@ -1,5 +1,5 @@
-import Review from "../components/review";
-import BookButton from "../components/booking/book-button";
+import Review from "../../components/review";
+import BookButton from "../../components/booking/book-button";
 
 export default function About() {
   return (

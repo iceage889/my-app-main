@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import NavBar from "./components/navbar";
-import Footer from "./components/footer";
-import { BookingProvider } from "./components/booking/booking-context";
 import AOSInit from "./components/aos-init";
 
 const spaceGrotesk = Space_Grotesk({
@@ -25,11 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${spaceGrotesk.variable} antialiased`}>
         <AOSInit />
-        <BookingProvider>
-          <NavBar />
-          <main className="overflow-x-hidden">{children}</main>
-          <Footer />
-        </BookingProvider>
+        {children}
       </body>
     </html>
   );

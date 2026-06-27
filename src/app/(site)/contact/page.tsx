@@ -3,8 +3,8 @@ import {
   IconMail,
   IconBrandWhatsapp,
 } from "@tabler/icons-react";
-import Review from "../components/review";
-import BookButton from "../components/booking/book-button";
+import Review from "../../components/review";
+import BookButton from "../../components/booking/book-button";
 
 export default function Contact() {
   return (

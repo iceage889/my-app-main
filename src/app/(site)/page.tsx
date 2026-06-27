@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Review from "./components/review";
-import Services from "./components/services";
-import BookButton from "./components/booking/book-button";
+import Review from "../components/review";
+import Services from "../components/services";
+import BookButton from "../components/booking/book-button";
 
 export default function Home() {
   return (

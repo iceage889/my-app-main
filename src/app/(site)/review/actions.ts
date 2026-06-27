@@ -1,7 +1,7 @@
 "use server";
 
-import { createServiceClient } from "../lib/supabase/server";
-import { createAndSendInvite } from "../lib/reviews/invite";
+import { createServiceClient } from "../../lib/supabase/server";
+import { createAndSendInvite } from "../../lib/reviews/invite";
 
 /** Used by the admin panel (slice 3) and the dev test route. */
 export async function sendReviewInvite(bookingId: string) {

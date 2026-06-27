@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { IconInfoCircle } from "@tabler/icons-react";
-import { zonePrices, extraServices } from "../lib/pricing";
-import BookButton from "../components/booking/book-button";
+import { zonePrices, extraServices } from "../../lib/pricing";
+import BookButton from "../../components/booking/book-button";
 
 export const metadata: Metadata = {
   title: "Pricing | MovingPace",

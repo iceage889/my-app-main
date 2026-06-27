@@ -1,4 +1,4 @@
-import { createServiceClient } from "../../lib/supabase/server";
+import { createServiceClient } from "../../../lib/supabase/server";
 import ReviewForm from "./review-form";
 
 type PageState = "form" | "invalid" | "expired" | "used";
