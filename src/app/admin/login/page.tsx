@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createBrowserSupabase } from "../../lib/supabase/browser";
+import Spinner from "../../components/spinner";
 
 const inputClass =
   "w-full rounded-xl border border-[var(--color-line-strong)] bg-[var(--color-base)] px-4 py-2.5 text-[var(--color-ink)] outline-none transition placeholder:text-[var(--color-ink-subtle)] focus:border-[var(--color-accent)]";
@@ -81,7 +82,13 @@ export default function AdminLogin() {
             disabled={loading}
             className="btn-accent w-full disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {loading ? "Signing in…" : "Sign in"}
+            {loading ? (
+              <>
+                <Spinner /> Signing in…
+              </>
+            ) : (
+              "Sign in"
+            )}
           </button>
         </form>
       </div>

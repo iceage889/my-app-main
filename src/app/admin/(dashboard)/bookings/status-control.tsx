@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { updateBookingStatus } from "../../actions";
+import Spinner from "../../../components/spinner";
 
 const STATUSES = [
   { value: "new", label: "New" },
@@ -36,18 +37,21 @@ export default function StatusControl({
 
   return (
     <div>
-      <select
-        value={current}
-        onChange={onChange}
-        disabled={pending}
-        className="rounded-lg border border-[var(--color-line-strong)] bg-[var(--color-base)] px-2 py-1.5 text-sm text-[var(--color-ink)] outline-none focus:border-[var(--color-accent)] disabled:opacity-50"
-      >
-        {STATUSES.map((s) => (
-          <option key={s.value} value={s.value}>
-            {s.label}
-          </option>
-        ))}
-      </select>
+      <div className="flex items-center gap-2">
+        <select
+          value={current}
+          onChange={onChange}
+          disabled={pending}
+          className="rounded-lg border border-[var(--color-line-strong)] bg-[var(--color-base)] px-2 py-1.5 text-sm text-[var(--color-ink)] outline-none focus:border-[var(--color-accent)] disabled:opacity-50"
+        >
+          {STATUSES.map((s) => (
+            <option key={s.value} value={s.value}>
+              {s.label}
+            </option>
+          ))}
+        </select>
+        {pending && <Spinner className="text-[var(--color-accent)]" />}
+      </div>
       {error && (
         <p className="mt-1 text-xs text-[var(--color-accent)]">{error}</p>
       )}

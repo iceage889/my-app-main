@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { IconStar, IconStarFilled, IconCheck } from "@tabler/icons-react";
 import { submitReview } from "../actions";
+import Spinner from "../../../components/spinner";
 
 const inputClass =
   "w-full rounded-xl border border-[var(--color-line-strong)] bg-[var(--color-base)] px-4 py-2.5 text-[var(--color-ink)] outline-none transition placeholder:text-[var(--color-ink-subtle)] focus:border-[var(--color-accent)]";
@@ -140,7 +141,13 @@ export default function ReviewForm({
           disabled={submitting}
           className="btn-accent w-full disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {submitting ? "Submitting…" : "Submit review"}
+          {submitting ? (
+            <>
+              <Spinner /> Submitting…
+            </>
+          ) : (
+            "Submit review"
+          )}
         </button>
       </form>
     </div>

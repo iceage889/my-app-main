@@ -15,6 +15,7 @@ import {
 } from "@tabler/icons-react";
 import { serviceCities } from "../../lib/pricing";
 import { createBooking } from "./actions";
+import Spinner from "../spinner";
 
 type Step = "date" | "time" | "form" | "success";
 
@@ -386,7 +387,13 @@ export default function BookingModal({
                 disabled={!formValid || submitting}
                 className="btn-accent w-full disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {submitting ? "Sending…" : "Confirm booking"}
+                {submitting ? (
+                  <>
+                    <Spinner /> Sending…
+                  </>
+                ) : (
+                  "Confirm booking"
+                )}
               </button>
             </>
           )}

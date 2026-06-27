@@ -3,6 +3,7 @@ import { getAdminUser } from "../../lib/supabase/auth-server";
 import { isAllowedAdmin } from "../../lib/admin/auth";
 import { signOut } from "../actions";
 import NavLink from "./nav-link";
+import SignOutButton from "./sign-out-button";
 
 export default async function AdminLayout({
   children,
@@ -27,9 +28,7 @@ export default async function AdminLayout({
         <div className="flex items-center gap-4 text-sm">
           <span className="text-[var(--color-ink-subtle)]">{user.email}</span>
           <form action={signOut}>
-            <button className="rounded-lg border border-[var(--color-line-strong)] px-3 py-1.5 text-[var(--color-ink)] transition hover:border-[var(--color-accent)]">
-              Sign out
-            </button>
+            <SignOutButton />
           </form>
         </div>
       </div>
