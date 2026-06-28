@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import NextTopLoader from "nextjs-toploader";
 import AOSInit from "./components/aos-init";
 import { siteUrl, siteName, siteTitle, siteDescription } from "./lib/seo";
 
@@ -52,6 +53,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${spaceGrotesk.variable} antialiased`}>
+        <NextTopLoader
+          color="#e11d2a"
+          height={3}
+          showSpinner={false}
+          shadow="0 0 10px #e11d2a,0 0 5px #e11d2a"
+        />
         <AOSInit />
         {children}
       </body>

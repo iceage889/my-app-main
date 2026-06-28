@@ -16,6 +16,7 @@
     "date-fns": "^4.4.0",
     "motion": "^12.23.22",
     "next": "^15.5.19",
+    "nextjs-toploader": "^3.9.17",
     "react": "^19.1.0",
     "react-day-picker": "^10.0.1",
     "react-dom": "^19.1.0",

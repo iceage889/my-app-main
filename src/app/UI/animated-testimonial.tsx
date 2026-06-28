@@ -25,12 +25,11 @@ function getInitials(name: string) {
 }
 export const AnimatedTestimonials = ({
   testimonials,
-  autoplay = false,
 }: {
   testimonials: Testimonial[];
-  autoplay?: boolean;
 }) => {
   const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   const handleNext = () => {
     setActive((prev) => (prev + 1) % testimonials.length);
@@ -44,21 +43,31 @@ export const AnimatedTestimonials = ({
     return index === active;
   };
 
+  // Start on a random review (client-only, to avoid a hydration mismatch).
   useEffect(() => {
-    if (autoplay) {
-      const interval = setInterval(handleNext, 5000);
-      return () => clearInterval(interval);
-    }
-  }, [autoplay]);
+    setActive(Math.floor(Math.random() * testimonials.length));
+  }, [testimonials.length]);
+
+  // Auto-advance every 3s, paused on hover.
+  useEffect(() => {
+    if (paused || testimonials.length <= 1) return;
+    const interval = setInterval(
+      () => setActive((prev) => (prev + 1) % testimonials.length),
+      3000
+    );
+    return () => clearInterval(interval);
+  }, [paused, testimonials.length]);
 
   const randomRotateY = () => {
     return Math.floor(Math.random() * 21) - 10;
   };
 
-  // Seed the random number generator for consistent behavior
-  Math.random();
   return (
-    <div className="mx-auto max-w-sm px-4 py-20 font-sans antialiased md:max-w-4xl md:px-8 lg:px-12">
+    <div
+      className="mx-auto max-w-sm px-4 py-20 font-sans antialiased md:max-w-4xl md:px-8 lg:px-12"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
       <div className="relative grid grid-cols-1 gap-20 md:grid-cols-2">
         <div>
           <div className="relative h-80 w-full">

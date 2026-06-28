@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 import BookButton from "./booking/book-button";
@@ -13,6 +14,10 @@ const links = [
 
 export default function NavBar() {
   const [navOpen, setNavOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--color-line)] bg-[var(--color-base)]/80 backdrop-blur-md">
@@ -28,7 +33,12 @@ export default function NavBar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-[var(--color-ink-muted)] transition hover:text-[var(--color-accent)]"
+              aria-current={isActive(link.href) ? "page" : undefined}
+              className={
+                isActive(link.href)
+                  ? "text-sm font-semibold text-[var(--color-accent)]"
+                  : "text-sm font-medium text-[var(--color-ink-muted)] transition hover:text-[var(--color-accent)]"
+              }
             >
               {link.label}
             </Link>
@@ -63,7 +73,12 @@ export default function NavBar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setNavOpen(false)}
-                className="rounded-lg px-3 py-2.5 font-medium text-[var(--color-ink-muted)] transition hover:bg-[var(--color-surface-2)] hover:text-[var(--color-accent)]"
+                aria-current={isActive(link.href) ? "page" : undefined}
+                className={
+                  isActive(link.href)
+                    ? "rounded-lg bg-[var(--color-surface-2)] px-3 py-2.5 font-semibold text-[var(--color-accent)]"
+                    : "rounded-lg px-3 py-2.5 font-medium text-[var(--color-ink-muted)] transition hover:bg-[var(--color-surface-2)] hover:text-[var(--color-accent)]"
+                }
               >
                 {link.label}
               </Link>
