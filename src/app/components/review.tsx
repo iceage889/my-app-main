@@ -1,43 +1,41 @@
 import { AnimatedTestimonials } from "../UI/animated-testimonial";
 import Header from "./header";
+import { createPublicClient } from "../lib/supabase/public";
 
-const testimonials = [
-  {
-    quote: "they work very fast and professionally .",
-    name: "Sarah Chen",
-    designation: "",
-    src: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    quote: "Reliable,Fast and Keep to time  .",
-    name: "Michael Rodriguez",
-    designation: "",
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    quote: "Deliver in time and keep to time.",
-    name: "Emily Watson",
-    designation: "",
-    src: "https://images.unsplash.com/photo-1623582854588-d60de57fa33f?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    quote: "Cheaper and keep to time.",
-    name: "James Kim",
-    designation: "",
-    src: "https://images.unsplash.com/photo-1636041293178-808a6762ab39?q=80&w=3464&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    quote:
-      "The scalability and performance have been game-changing for our organization. Highly recommend to any growing business.",
-    name: "Lisa Thompson",
-    designation: "VP of Technology at FutureNet",
-    src: "https://images.unsplash.com/photo-1624561172888-ac93c696e10c?q=80&w=2592&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-];
+type ReviewRow = {
+  name: string;
+  city: string | null;
+  rating: number;
+  comment: string;
+  image_url: string | null;
+};
 
-export default function Review() {
+export default async function Review() {
+  const supabase = createPublicClient();
+
+  let rows: ReviewRow[] = [];
+  if (supabase) {
+    const { data } = await supabase
+      .from("reviews")
+      .select("name, city, rating, comment, image_url")
+      .eq("approved", true)
+      .order("created_at", { ascending: false })
+      .limit(12);
+    rows = data ?? [];
+  }
+
+  if (rows.length === 0) return null;
+
+  const testimonials = rows.map((r) => ({
+    quote: r.comment,
+    name: r.name,
+    designation: r.city ?? "",
+    rating: r.rating,
+    src: r.image_url ?? "",
+  }));
+
   return (
-    <section id="testimonials">
+    <section id="testimonials" className="py-12" data-aos="fade-up">
       <Header title="Customer Reviews" />
       <AnimatedTestimonials testimonials={testimonials} />
     </section>
