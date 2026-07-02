@@ -1,5 +1,5 @@
 export const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://movingpace.nl";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.movingpace.nl";
 
 export const siteName = "MovingPace";
 
