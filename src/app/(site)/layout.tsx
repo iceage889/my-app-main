@@ -12,11 +12,11 @@ const jsonLd = {
   image: `${siteUrl}/opengraph-image`,
   logo: `${siteUrl}/icon.svg`,
   description: siteDescription,
-  telephone: "+31681059122",
+  telephone: "+31685330836",
   email: "Movingpace48@gmail.com",
   priceRange: "€€",
   areaServed: serviceCities.map((city) => ({ "@type": "City", name: city })),
-  sameAs: ["https://wa.me/31681059122"],
+  sameAs: ["https://wa.me/31685330836"],
 };
 
 export default function SiteLayout({

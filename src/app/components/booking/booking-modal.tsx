@@ -20,7 +20,7 @@ import Spinner from "../spinner";
 type Step = "date" | "time" | "form" | "success";
 
 const OTHER = "Other";
-const WHATSAPP_NUMBER = "31681059122";
+const WHATSAPP_NUMBER = "31685330836";
 
 // Mocked availability — replaced with backend data later.
 const TIME_SLOTS = [
