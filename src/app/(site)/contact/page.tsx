@@ -32,14 +32,14 @@ export default function Contact() {
 
           <div className="mt-8 flex flex-col gap-4">
             <a
-              href="tel:+31681059122"
+              href="tel:+31685330836"
               className="flex items-center gap-3 text-[var(--color-ink-muted)] transition hover:text-[var(--color-accent)]"
             >
               <IconPhone className="h-5 w-5 text-[var(--color-accent)]" />
-              +31 6 8105 9122
+              +31 6 8533 0836
             </a>
             <a
-              href="https://wa.me/31681059122"
+              href="https://wa.me/31685330836"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 text-[var(--color-ink-muted)] transition hover:text-[var(--color-accent)]"
