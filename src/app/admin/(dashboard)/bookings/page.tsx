@@ -15,6 +15,9 @@ type BookingRow = {
   status: string;
   reviewed_at: string | null;
   review_token: string | null;
+  service_type: string;
+  route: string | null;
+  route_rate: string | null;
 };
 
 function reviewState(b: BookingRow) {
@@ -28,7 +31,7 @@ export default async function AdminBookings() {
   const { data } = await supabase
     .from("bookings")
     .select(
-      "id, name, phone, email, from_city, to_city, move_date, move_time, out_of_region, status, reviewed_at, review_token"
+      "id, name, phone, email, from_city, to_city, move_date, move_time, out_of_region, status, reviewed_at, review_token, service_type, route, route_rate"
     )
     .order("move_date", { ascending: false });
 
@@ -78,6 +81,11 @@ export default async function AdminBookings() {
                     <span className="text-[var(--color-ink)]">
                       {b.from_city} → {b.to_city}
                     </span>
+                    {b.service_type === "airport" && (
+                      <span className="mt-1 block w-fit rounded-md bg-[var(--color-accent-soft)] px-1.5 py-0.5 text-xs font-medium text-[var(--color-accent)]">
+                        Airport{b.route_rate ? ` · ${b.route_rate}` : ""}
+                      </span>
+                    )}
                     {b.out_of_region && (
                       <span className="mt-1 block text-xs font-medium text-[var(--color-accent)]">
                         Out of region
