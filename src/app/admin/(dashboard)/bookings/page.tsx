@@ -1,6 +1,10 @@
+import Link from "next/link";
 import { format } from "date-fns";
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { createServiceClient } from "../../../lib/supabase/server";
 import StatusControl from "./status-control";
+import BookingsToolbar from "./bookings-toolbar";
+import { BookingsProvider, BookingsContent } from "./bookings-shell";
 
 type BookingRow = {
   id: string;
@@ -21,34 +25,99 @@ type BookingRow = {
   status_message: string | null;
 };
 
+const STATUS_VALUES = ["new", "accepted", "completed", "cancelled"];
+const PER_OPTIONS = [5, 10, 15, 20, 50];
+
 function reviewState(b: BookingRow) {
   if (b.reviewed_at) return "Reviewed";
   if (b.review_token) return "Invited";
   return "—";
 }
 
-export default async function AdminBookings() {
+/** Escape user input so it can't break the PostgREST or() filter string. */
+function toSearchTerm(q: string) {
+  return q.replace(/[,()%\\]/g, " ").trim();
+}
+
+export default async function AdminBookings({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    q?: string;
+    status?: string;
+    page?: string;
+    per?: string;
+  }>;
+}) {
+  const params = await searchParams;
+  const q = (params.q ?? "").trim();
+  const status = STATUS_VALUES.includes(params.status ?? "")
+    ? (params.status as string)
+    : "all";
+  const perRaw = Number(params.per);
+  const per = PER_OPTIONS.includes(perRaw) ? perRaw : 10;
+  const pageRaw = Number(params.page);
+  const requestedPage = Number.isInteger(pageRaw) && pageRaw >= 1 ? pageRaw : 1;
+
   const supabase = createServiceClient();
-  const { data } = await supabase
+  const term = toSearchTerm(q);
+  const orFilter = term
+    ? `name.ilike.%${term}%,email.ilike.%${term}%,phone.ilike.%${term}%`
+    : "";
+
+  // Filtered count first, so the page number can be clamped safely.
+  let countQuery = supabase
+    .from("bookings")
+    .select("id", { count: "exact", head: true });
+  if (status !== "all") countQuery = countQuery.eq("status", status);
+  if (orFilter) countQuery = countQuery.or(orFilter);
+  const { count } = await countQuery;
+
+  const total = count ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / per));
+  const page = Math.min(requestedPage, totalPages);
+
+  let dataQuery = supabase
     .from("bookings")
     .select(
       "id, name, phone, email, from_city, to_city, move_date, move_time, out_of_region, status, reviewed_at, review_token, service_type, route, route_rate, status_message"
-    )
-    .order("move_date", { ascending: false });
+    );
+  if (status !== "all") dataQuery = dataQuery.eq("status", status);
+  if (orFilter) dataQuery = dataQuery.or(orFilter);
+  const { data } = await dataQuery
+    .order("move_date", { ascending: false })
+    .range((page - 1) * per, page * per - 1);
 
   const bookings = (data ?? []) as BookingRow[];
+
+  const pageHref = (p: number) => {
+    const sp = new URLSearchParams();
+    if (q) sp.set("q", q);
+    if (status !== "all") sp.set("status", status);
+    if (per !== 10) sp.set("per", String(per));
+    sp.set("page", String(p));
+    return `/admin/bookings?${sp.toString()}`;
+  };
 
   return (
     <div>
       <div className="mb-6 flex items-baseline gap-3">
         <h1 className="text-2xl font-bold">Bookings</h1>
         <span className="text-sm text-[var(--color-ink-subtle)]">
-          {bookings.length} total
+          {total} {q || status !== "all" ? "matching" : "total"}
         </span>
       </div>
 
+      <BookingsProvider>
+        <BookingsToolbar />
+
+        <BookingsContent rows={Math.min(per, 8)}>
       {bookings.length === 0 ? (
-        <p className="text-[var(--color-ink-muted)]">No bookings yet.</p>
+        <p className="py-10 text-center text-[var(--color-ink-muted)]">
+          {q || status !== "all"
+            ? "No bookings match your search."
+            : "No bookings yet."}
+        </p>
       ) : (
         <div className="card overflow-x-auto">
           <table className="w-full text-left text-sm">
@@ -58,6 +127,7 @@ export default async function AdminBookings() {
                 <th className="px-4 py-3 font-medium">Route</th>
                 <th className="px-4 py-3 font-medium">When</th>
                 <th className="px-4 py-3 font-medium">Status</th>
+                <th className="px-4 py-3 font-medium">Note</th>
                 <th className="px-4 py-3 font-medium">Review</th>
               </tr>
             </thead>
@@ -102,10 +172,14 @@ export default async function AdminBookings() {
                   </td>
                   <td className="px-4 py-3">
                     <StatusControl id={b.id} status={b.status} />
-                    {b.status_message && (
-                      <p className="mt-1 max-w-[220px] text-xs text-[var(--color-ink-subtle)]">
+                  </td>
+                  <td className="px-4 py-3">
+                    {b.status_message ? (
+                      <p className="max-w-[200px] text-xs text-[var(--color-ink-muted)]">
                         “{b.status_message}”
                       </p>
+                    ) : (
+                      <span className="text-[var(--color-ink-subtle)]">—</span>
                     )}
                   </td>
                   <td className="px-4 py-3 text-[var(--color-ink-muted)]">
@@ -117,6 +191,43 @@ export default async function AdminBookings() {
           </table>
         </div>
       )}
+
+      {/* Pagination */}
+      <div className="mt-6 flex items-center justify-end gap-3">
+        <span className="text-sm text-[var(--color-ink-muted)]">
+          Page {page} of {totalPages}
+        </span>
+        <div className="flex gap-1.5">
+          {page > 1 ? (
+            <Link
+              href={pageHref(page - 1)}
+              aria-label="Previous page"
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--color-line-strong)] text-[var(--color-ink)] transition hover:border-[var(--color-accent)]"
+            >
+              <IconChevronLeft className="h-4 w-4" />
+            </Link>
+          ) : (
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--color-line)] text-[var(--color-ink-subtle)] opacity-50">
+              <IconChevronLeft className="h-4 w-4" />
+            </span>
+          )}
+          {page < totalPages ? (
+            <Link
+              href={pageHref(page + 1)}
+              aria-label="Next page"
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--color-line-strong)] text-[var(--color-ink)] transition hover:border-[var(--color-accent)]"
+            >
+              <IconChevronRight className="h-4 w-4" />
+            </Link>
+          ) : (
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--color-line)] text-[var(--color-ink-subtle)] opacity-50">
+              <IconChevronRight className="h-4 w-4" />
+            </span>
+          )}
+        </div>
+      </div>
+        </BookingsContent>
+      </BookingsProvider>
     </div>
   );
 }
