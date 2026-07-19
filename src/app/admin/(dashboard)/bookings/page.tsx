@@ -18,6 +18,7 @@ type BookingRow = {
   service_type: string;
   route: string | null;
   route_rate: string | null;
+  status_message: string | null;
 };
 
 function reviewState(b: BookingRow) {
@@ -31,7 +32,7 @@ export default async function AdminBookings() {
   const { data } = await supabase
     .from("bookings")
     .select(
-      "id, name, phone, email, from_city, to_city, move_date, move_time, out_of_region, status, reviewed_at, review_token, service_type, route, route_rate"
+      "id, name, phone, email, from_city, to_city, move_date, move_time, out_of_region, status, reviewed_at, review_token, service_type, route, route_rate, status_message"
     )
     .order("move_date", { ascending: false });
 
@@ -101,6 +102,11 @@ export default async function AdminBookings() {
                   </td>
                   <td className="px-4 py-3">
                     <StatusControl id={b.id} status={b.status} />
+                    {b.status_message && (
+                      <p className="mt-1 max-w-[220px] text-xs text-[var(--color-ink-subtle)]">
+                        “{b.status_message}”
+                      </p>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-[var(--color-ink-muted)]">
                     {reviewState(b)}
