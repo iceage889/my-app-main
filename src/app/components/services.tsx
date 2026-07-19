@@ -3,6 +3,7 @@ import {
   IconBoxSeam,
   IconStairsUp,
   IconTool,
+  IconPlane,
 } from "@tabler/icons-react";
 import Header from "./header";
 
@@ -31,6 +32,12 @@ const services = [
     description:
       "We take apart and rebuild beds, wardrobes and tables at both ends of the move.",
   },
+  {
+    icon: IconPlane,
+    title: "Airport & Transfer",
+    description:
+      "Flat-rate luggage transport between Almere, Schiphol, Amsterdam and more — courtesy ride included.",
+  },
 ];
 
 export default function Services() {
@@ -40,7 +47,7 @@ export default function Services() {
         title="Our Services"
         subtitle="Pick exactly what you need — pay only for what you use."
       />
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {services.map((service, i) => (
           <div
             key={service.title}
