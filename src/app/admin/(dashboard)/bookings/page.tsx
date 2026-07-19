@@ -23,6 +23,8 @@ type BookingRow = {
   route: string | null;
   route_rate: string | null;
   status_message: string | null;
+  from_address: string | null;
+  to_address: string | null;
 };
 
 const STATUS_VALUES = ["new", "accepted", "completed", "cancelled"];
@@ -80,7 +82,7 @@ export default async function AdminBookings({
   let dataQuery = supabase
     .from("bookings")
     .select(
-      "id, name, phone, email, from_city, to_city, move_date, move_time, out_of_region, status, reviewed_at, review_token, service_type, route, route_rate, status_message"
+      "id, name, phone, email, from_city, to_city, move_date, move_time, out_of_region, status, reviewed_at, review_token, service_type, route, route_rate, status_message, from_address, to_address"
     );
   if (status !== "all") dataQuery = dataQuery.eq("status", status);
   if (orFilter) dataQuery = dataQuery.or(orFilter);
@@ -161,6 +163,24 @@ export default async function AdminBookings({
                       <span className="mt-1 block text-xs font-medium text-[var(--color-accent)]">
                         Out of region
                       </span>
+                    )}
+                    {(b.from_address || b.to_address) && (
+                      <span className="mt-1 block max-w-[240px] text-xs text-[var(--color-ink-subtle)]">
+                        {b.from_address ?? b.from_city} →{" "}
+                        {b.to_address ?? b.to_city}
+                      </span>
+                    )}
+                    {b.service_type === "moving" && (
+                      <a
+                        href={`https://www.google.com/maps/dir/${encodeURIComponent(
+                          b.from_address ?? b.from_city
+                        )}/${encodeURIComponent(b.to_address ?? b.to_city)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-1 block text-xs font-medium text-[var(--color-accent)] hover:underline"
+                      >
+                        Directions ↗
+                      </a>
                     )}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-[var(--color-ink-muted)]">

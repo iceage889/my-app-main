@@ -17,7 +17,7 @@ const STATUS_OPTIONS = [
 const PER_OPTIONS = [5, 10, 15, 20, 50];
 
 const selectClass =
-  "rounded-lg border border-[var(--color-line-strong)] bg-[var(--color-base)] px-2 py-2 text-sm text-[var(--color-ink)] outline-none focus:border-[var(--color-accent)]";
+  "rounded-lg border border-[var(--color-line-strong)] bg-[var(--color-page)] px-2 py-2 text-sm text-[var(--color-ink)] outline-none focus:border-[var(--color-accent)]";
 
 export default function BookingsToolbar() {
   const { pending, navigate } = useBookingsNav();
@@ -59,7 +59,7 @@ export default function BookingsToolbar() {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search name, email or phone…"
-          className="w-full rounded-lg border border-[var(--color-line-strong)] bg-[var(--color-base)] py-2 pl-9 pr-8 text-sm text-[var(--color-ink)] outline-none placeholder:text-[var(--color-ink-subtle)] focus:border-[var(--color-accent)]"
+          className="w-full rounded-lg border border-[var(--color-line-strong)] bg-[var(--color-page)] py-2 pl-9 pr-8 text-sm text-[var(--color-ink)] outline-none placeholder:text-[var(--color-ink-subtle)] focus:border-[var(--color-accent)]"
         />
         {pending ? (
           <Spinner className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--color-accent)]" />

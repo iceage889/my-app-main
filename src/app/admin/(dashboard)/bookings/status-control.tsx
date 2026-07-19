@@ -63,7 +63,7 @@ export default function StatusControl({
           value={draft ?? current}
           onChange={onChange}
           disabled={pending}
-          className="rounded-lg border border-[var(--color-line-strong)] bg-[var(--color-base)] px-2 py-1.5 text-sm text-[var(--color-ink)] outline-none focus:border-[var(--color-accent)] disabled:opacity-50"
+          className="rounded-lg border border-[var(--color-line-strong)] bg-[var(--color-page)] px-2 py-1.5 text-sm text-[var(--color-ink)] outline-none focus:border-[var(--color-accent)] disabled:opacity-50"
         >
           {STATUSES.map((s) => (
             <option key={s.value} value={s.value}>
@@ -85,7 +85,7 @@ export default function StatusControl({
                 ? "Reason for cancelling (optional, emailed to customer)"
                 : "Message to customer (optional)"
             }
-            className="w-full rounded-lg border border-[var(--color-line-strong)] bg-[var(--color-base)] px-2 py-1.5 text-sm text-[var(--color-ink)] outline-none placeholder:text-[var(--color-ink-subtle)] focus:border-[var(--color-accent)]"
+            className="w-full rounded-lg border border-[var(--color-line-strong)] bg-[var(--color-page)] px-2 py-1.5 text-sm text-[var(--color-ink)] outline-none placeholder:text-[var(--color-ink-subtle)] focus:border-[var(--color-accent)]"
           />
           <div className="flex gap-2">
             <button

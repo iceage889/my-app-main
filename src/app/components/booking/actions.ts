@@ -15,6 +15,8 @@ export type BookingPayload = {
   serviceType: "moving" | "airport";
   route?: string;
   routeRate?: string;
+  fromAddress?: string;
+  toAddress?: string;
 };
 
 export type BookingResult = { ok: true } | { ok: false; error: string };
@@ -37,6 +39,8 @@ export async function createBooking(
       service_type: payload.serviceType,
       route: payload.route ?? null,
       route_rate: payload.routeRate ?? null,
+      from_address: payload.fromAddress || null,
+      to_address: payload.toAddress || null,
     });
 
     if (error) {
@@ -149,8 +153,8 @@ function adminEmailHtml(
         ${
           isAirport(payload)
             ? `<li>Route: ${escapeHtml(payload.route ?? "")} ${escapeHtml(payload.routeRate ?? "")}</li>`
-            : `<li>From: ${escapeHtml(payload.fromCity)}</li>
-        <li>To: ${escapeHtml(payload.toCity)}</li>`
+            : `<li>From: ${escapeHtml(payload.fromAddress || payload.fromCity)}</li>
+        <li>To: ${escapeHtml(payload.toAddress || payload.toCity)}</li>`
         }
         <li>Date: ${escapeHtml(payload.moveDate)} at ${escapeHtml(payload.moveTime)}</li>
         <li>Out of region: ${payload.outOfRegion ? "Yes" : "No"}</li>
