@@ -2,7 +2,7 @@
 
 @theme {
   /* Surfaces (dark, layered for depth) */
-  --color-base: #0a0a0b;
+  --color-page: #0a0a0b;
   --color-surface: #141417;
   --color-surface-2: #1c1c21;
   --color-elevated: #26262d;
@@ -33,7 +33,7 @@ html {
 }
 
 body {
-  background-color: var(--color-base);
+  background-color: var(--color-page);
   color: var(--color-ink);
   font-family: var(--font-space-grotesk), system-ui, sans-serif;
 }

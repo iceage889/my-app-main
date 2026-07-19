@@ -1,6 +1,4 @@
-"use client";
-
-import { useBooking } from "./booking-context";
+import Link from "next/link";
 
 export default function BookButton({
   className = "",
@@ -9,10 +7,9 @@ export default function BookButton({
   className?: string;
   children?: React.ReactNode;
 }) {
-  const { openBooking } = useBooking();
   return (
-    <button onClick={openBooking} className={className || "btn-accent"}>
+    <Link href="/book" className={className || "btn-accent"}>
       {children}
-    </button>
+    </Link>
   );
 }

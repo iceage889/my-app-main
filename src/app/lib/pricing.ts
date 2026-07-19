@@ -53,3 +53,23 @@ export const airportRoutes: AirportRoute[] = [
 export const serviceCities: string[] = Array.from(
   new Set(zonePrices.map((z) => z.city.replace(" (all districts)", "")))
 );
+
+/** Numeric hourly rate (EUR, ex BTW) per served city — hourly rate follows the destination zone. */
+export const cityHourlyRates: Record<string, number> = {
+  almere: 65,
+  lelystad: 85,
+  zeewolde: 85,
+  diemen: 110,
+  weesp: 110,
+  muiden: 110,
+  amsterdam: 120,
+  hilversum: 110,
+  amersfoort: 120,
+};
+
+export const DISTANCE_RATE_PER_KM = 0.35;
+
+export function hourlyRateFor(city: string | null | undefined): number | null {
+  if (!city) return null;
+  return cityHourlyRates[city.toLowerCase()] ?? null;
+}

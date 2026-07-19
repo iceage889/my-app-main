@@ -2,6 +2,7 @@
 
 import { Resend } from "resend";
 import { createServiceClient } from "../../lib/supabase/server";
+import { hourlyRateFor, DISTANCE_RATE_PER_KM } from "../../lib/pricing";
 
 export type BookingPayload = {
   name: string;
@@ -15,7 +16,51 @@ export type BookingPayload = {
   serviceType: "moving" | "airport";
   route?: string;
   routeRate?: string;
+  fromAddress?: string;
+  toAddress?: string;
+  distanceKm?: number;
 };
+
+export type EstimateInput = {
+  fromLat: number;
+  fromLng: number;
+  toLat: number;
+  toLng: number;
+  toCity: string;
+};
+
+export type EstimateResult =
+  | { ok: true; km: number; kmCharge: number; hourlyRate: number }
+  | { ok: false };
+
+/**
+ * Driving distance via the public OSRM demo server (free, no key, best-effort).
+ * Fails soft: any error or timeout simply means no estimate is shown.
+ */
+export async function getRouteEstimate(
+  input: EstimateInput
+): Promise<EstimateResult> {
+  const hourlyRate = hourlyRateFor(input.toCity);
+  if (!hourlyRate) return { ok: false };
+
+  try {
+    const url = `https://router.project-osrm.org/route/v1/driving/${input.fromLng},${input.fromLat};${input.toLng},${input.toLat}?overview=false`;
+    const res = await fetch(url, {
+      signal: AbortSignal.timeout(3000),
+      cache: "no-store",
+    });
+    if (!res.ok) return { ok: false };
+    const json = await res.json();
+    const meters = json?.routes?.[0]?.distance;
+    if (typeof meters !== "number" || meters <= 0) return { ok: false };
+
+    const km = Math.round(meters / 100) / 10; // one decimal
+    const kmCharge = Math.round(km * DISTANCE_RATE_PER_KM * 100) / 100;
+    return { ok: true, km, kmCharge, hourlyRate };
+  } catch {
+    return { ok: false };
+  }
+}
 
 export type BookingResult = { ok: true } | { ok: false; error: string };
 
@@ -37,6 +82,9 @@ export async function createBooking(
       service_type: payload.serviceType,
       route: payload.route ?? null,
       route_rate: payload.routeRate ?? null,
+      from_address: payload.fromAddress || null,
+      to_address: payload.toAddress || null,
+      distance_km: payload.distanceKm ?? null,
     });
 
     if (error) {
@@ -149,10 +197,17 @@ function adminEmailHtml(
         ${
           isAirport(payload)
             ? `<li>Route: ${escapeHtml(payload.route ?? "")} ${escapeHtml(payload.routeRate ?? "")}</li>`
-            : `<li>From: ${escapeHtml(payload.fromCity)}</li>
-        <li>To: ${escapeHtml(payload.toCity)}</li>`
+            : `<li>From: ${escapeHtml(payload.fromAddress || payload.fromCity)}</li>
+        <li>To: ${escapeHtml(payload.toAddress || payload.toCity)}</li>`
         }
         <li>Date: ${escapeHtml(payload.moveDate)} at ${escapeHtml(payload.moveTime)}</li>
+        ${
+          payload.distanceKm
+            ? `<li>Distance: ~${payload.distanceKm} km (≈ €${(
+                payload.distanceKm * DISTANCE_RATE_PER_KM
+              ).toFixed(2)} km charge)</li>`
+            : ""
+        }
         <li>Out of region: ${payload.outOfRegion ? "Yes" : "No"}</li>
       </ul>
     </div>

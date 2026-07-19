@@ -1,6 +1,5 @@
 import NavBar from "../components/navbar";
 import Footer from "../components/footer";
-import { BookingProvider } from "../components/booking/booking-context";
 import { siteUrl, siteName, siteDescription } from "../lib/seo";
 import { serviceCities } from "../lib/pricing";
 
@@ -25,7 +24,7 @@ export default function SiteLayout({
   children: React.ReactNode;
 }) {
   return (
-    <BookingProvider>
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -33,6 +32,6 @@ export default function SiteLayout({
       <NavBar />
       <main className="overflow-x-hidden">{children}</main>
       <Footer />
-    </BookingProvider>
+    </>
   );
 }
