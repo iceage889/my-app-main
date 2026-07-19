@@ -25,6 +25,7 @@ type BookingRow = {
   status_message: string | null;
   from_address: string | null;
   to_address: string | null;
+  distance_km: number | null;
 };
 
 const STATUS_VALUES = ["new", "accepted", "completed", "cancelled"];
@@ -82,7 +83,7 @@ export default async function AdminBookings({
   let dataQuery = supabase
     .from("bookings")
     .select(
-      "id, name, phone, email, from_city, to_city, move_date, move_time, out_of_region, status, reviewed_at, review_token, service_type, route, route_rate, status_message, from_address, to_address"
+      "id, name, phone, email, from_city, to_city, move_date, move_time, out_of_region, status, reviewed_at, review_token, service_type, route, route_rate, status_message, from_address, to_address, distance_km"
     );
   if (status !== "all") dataQuery = dataQuery.eq("status", status);
   if (orFilter) dataQuery = dataQuery.or(orFilter);
@@ -168,6 +169,11 @@ export default async function AdminBookings({
                       <span className="mt-1 block max-w-[240px] text-xs text-[var(--color-ink-subtle)]">
                         {b.from_address ?? b.from_city} →{" "}
                         {b.to_address ?? b.to_city}
+                      </span>
+                    )}
+                    {b.distance_km != null && (
+                      <span className="mt-1 block text-xs text-[var(--color-ink-subtle)]">
+                        ~{b.distance_km} km
                       </span>
                     )}
                     {b.service_type === "moving" && (

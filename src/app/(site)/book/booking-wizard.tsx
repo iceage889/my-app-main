@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
@@ -15,8 +15,17 @@ import {
   IconTruck,
   IconPlane,
 } from "@tabler/icons-react";
-import { serviceCities, airportRoutes } from "../../lib/pricing";
-import { createBooking } from "../../components/booking/actions";
+import {
+  serviceCities,
+  airportRoutes,
+  hourlyRateFor,
+  DISTANCE_RATE_PER_KM,
+} from "../../lib/pricing";
+import {
+  createBooking,
+  getRouteEstimate,
+  type EstimateResult,
+} from "../../components/booking/actions";
 import AddressAutocomplete, {
   type AddressValue,
 } from "../../components/address-autocomplete";
@@ -64,8 +73,50 @@ export default function BookingWizard() {
   const [route, setRoute] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [estimate, setEstimate] = useState<Extract<
+    EstimateResult,
+    { ok: true }
+  > | null>(null);
+  const [estimating, setEstimating] = useState(false);
 
   const isMoving = service === "moving";
+
+  // Fetch a distance estimate once both addresses have coordinates and the
+  // destination has a known zone rate. Fails soft — no estimate, no problem.
+  useEffect(() => {
+    setEstimate(null);
+    if (
+      !from?.lat ||
+      !from?.lng ||
+      !to?.lat ||
+      !to?.lng ||
+      !hourlyRateFor(to.city)
+    ) {
+      setEstimating(false);
+      return;
+    }
+    let cancelled = false;
+    setEstimating(true);
+    getRouteEstimate({
+      fromLat: from.lat,
+      fromLng: from.lng,
+      toLat: to.lat,
+      toLng: to.lng,
+      toCity: to.city!,
+    })
+      .then((r) => {
+        if (!cancelled) setEstimate(r.ok ? r : null);
+      })
+      .catch(() => {
+        if (!cancelled) setEstimate(null);
+      })
+      .finally(() => {
+        if (!cancelled) setEstimating(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [from, to]);
 
   const fromResolved = isMoving
     ? from
@@ -128,6 +179,7 @@ export default function BookingWizard() {
       serviceType: service,
       route: isMoving ? undefined : route,
       routeRate: isMoving ? undefined : selectedRoute?.rate,
+      distanceKm: isMoving ? estimate?.km : undefined,
     });
 
     setSubmitting(false);
@@ -301,6 +353,31 @@ export default function BookingWizard() {
                 value={to}
                 onChange={setTo}
               />
+
+              {(estimating || estimate) && (
+                <div className="rounded-xl bg-[var(--color-surface-2)] px-4 py-3 text-sm">
+                  {estimating ? (
+                    <span className="flex items-center gap-2 text-[var(--color-ink-muted)]">
+                      <Spinner /> Calculating estimate…
+                    </span>
+                  ) : (
+                    estimate && (
+                      <p className="text-[var(--color-ink-muted)]">
+                        Estimate:{" "}
+                        <span className="font-semibold text-[var(--color-accent)]">
+                          €{estimate.hourlyRate}/hr
+                        </span>{" "}
+                        ({to?.city} zone) + ~{estimate.km} km × €
+                        {DISTANCE_RATE_PER_KM.toFixed(2)} ≈{" "}
+                        <span className="font-semibold text-[var(--color-accent)]">
+                          €{estimate.kmCharge.toFixed(2)}
+                        </span>{" "}
+                        distance charge — ex BTW, indicative.
+                      </p>
+                    )
+                  )}
+                </div>
+              )}
 
               {outOfRegion && (
                 <div className="rounded-xl border border-[var(--color-accent)] bg-[var(--color-accent-soft)] p-4">
