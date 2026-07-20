@@ -20,8 +20,14 @@ export default function Footer() {
         {/* Brand */}
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <img src="/images/logo-mark.svg" alt="MovingPace logo" className="w-9" />
-            <span className="text-lg font-bold">MovingPace</span>
+            <img
+              src="/images/logo-mark.svg"
+              alt="MovingPace logo"
+              className="w-11"
+            />
+            <span className="text-lg font-bold">
+              Moving<span className="text-[var(--color-accent)]">Pace</span>
+            </span>
           </div>
           <p className="text-sm leading-relaxed text-[var(--color-ink-muted)]">
             Moving your property with pace. Reliable, fast and affordable

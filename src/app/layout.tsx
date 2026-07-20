@@ -54,10 +54,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${spaceGrotesk.variable} antialiased`}>
         <NextTopLoader
-          color="#e11d2a"
+          color="#f5a800"
           height={3}
           showSpinner={false}
-          shadow="0 0 10px #e11d2a,0 0 5px #e11d2a"
+          shadow="0 0 10px #f5a800,0 0 5px #f5a800"
         />
         <AOSInit />
         {children}
