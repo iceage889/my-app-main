@@ -23,8 +23,14 @@ export default function NavBar() {
     <header className="sticky top-0 z-50 border-b border-[var(--color-line)] bg-[var(--color-page)]/80 backdrop-blur-md">
       <nav className="container mx-auto flex items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center gap-2">
-          <img src="/images/logo-mark.svg" alt="MovingPace logo" className="w-9" />
-          <span className="text-lg font-bold tracking-tight">MovingPace</span>
+          <img
+            src="/images/logo-mark.svg"
+            alt="MovingPace logo"
+            className="w-11"
+          />
+          <span className="text-lg font-bold tracking-tight">
+            Moving<span className="text-[var(--color-accent)]">Pace</span>
+          </span>
         </Link>
 
         {/* Desktop links */}

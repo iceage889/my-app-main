@@ -166,12 +166,12 @@ function customerEmailHtml(
 ) {
   return `
     <div style="font-family: Arial, sans-serif; color: #111; line-height: 1.6;">
-      <h2 style="color:#e11d2a;">Thanks, ${escapeHtml(payload.name)}!</h2>
+      <h2 style="color:#14213d;">Thanks, ${escapeHtml(payload.name)}!</h2>
       <p>We've received your ${escapeHtml(label.toLowerCase())} request and will be in touch shortly to confirm.</p>
       <p><strong>Details:</strong><br/>${escapeHtml(summary)}</p>
       ${
         payload.outOfRegion
-          ? `<p style="color:#b3101c;">Note: one of your locations is outside our usual service area — we'll confirm whether we can help.</p>`
+          ? `<p style="color:#b45309;">Note: one of your locations is outside our usual service area — we'll confirm whether we can help.</p>`
           : ""
       }
       <p>Payment is on arrival, before the job begins — cash or bank transfer (Tikkie/iDEAL). Prices exclude 21% BTW.</p>

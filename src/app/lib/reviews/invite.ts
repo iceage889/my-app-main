@@ -71,10 +71,10 @@ async function sendInviteEmail(name: string, email: string, token: string) {
     subject: "Thanks for moving with MovingPace — how did we do?",
     html: `
       <div style="font-family: Arial, sans-serif; color: #111; line-height: 1.6;">
-        <h2 style="color:#e11d2a;">Thank you, ${escapeHtml(name)}!</h2>
+        <h2 style="color:#14213d;">Thank you, ${escapeHtml(name)}!</h2>
         <p>We hope your move went smoothly. We'd really appreciate it if you took a moment to share how it went.</p>
         <p style="margin:24px 0;">
-          <a href="${link}" style="background:#e11d2a;color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;display:inline-block;font-weight:bold;">Leave a review</a>
+          <a href="${link}" style="background:#f5a800;color:#0a1128;text-decoration:none;padding:12px 20px;border-radius:8px;display:inline-block;font-weight:bold;">Leave a review</a>
         </p>
         <p style="font-size:13px;color:#666;">This link is valid for 7 days. If the button doesn't work, paste this into your browser:<br/>${link}</p>
         <p style="margin-top:24px;">— MovingPace</p>

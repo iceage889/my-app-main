@@ -1,15 +1,23 @@
-<svg viewBox="60 10 200 200" xmlns="http://www.w3.org/2000/svg" role="img">
+<svg viewBox="0 0 260 140" xmlns="http://www.w3.org/2000/svg" role="img">
   <title>MovingPace</title>
   <style>
-    .ink { stroke: #1a1a2e; fill: #1a1a2e; }
-    .accent { stroke: #e63946; fill: #e63946; }
+    .body { fill: #14213d; }
+    .dark { fill: #ffffff; }
     @media (prefers-color-scheme: dark) {
-      .ink { stroke: #f2f2f2; fill: #f2f2f2; }
-      .accent { stroke: #ff5468; fill: #ff5468; }
+      .body { fill: #f5f6fa; }
+      .dark { fill: #0a1128; }
     }
   </style>
-  <circle cx="160" cy="110" r="85" style="fill:none" class="ink" stroke-width="6" />
-  <path d="M111,146 L136,92 L166,110 L209,68" style="fill:none" class="accent" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" />
-  <circle cx="111" cy="146" r="8" style="fill:none" class="ink" stroke-width="5" />
-  <circle cx="209" cy="68" r="13" class="accent" />
+  <g fill="#f5a800">
+    <polygon points="0,50 60,44 60,58 10,58" />
+    <polygon points="16,72 60,66 60,80 24,80" />
+    <polygon points="6,94 60,88 60,102 14,102" />
+  </g>
+  <rect x="66" y="30" width="94" height="72" rx="9" class="body" />
+  <path d="M166 102 V50 h30 q7 0 10.5 6 l14 25 q2.5 4.5 2.5 9 v7 a5 5 0 0 1 -5 5 z" class="body" />
+  <path d="M173 58 h20 q4 0 6 3.5 l8.5 15.5 h-34.5 z" fill="#f5a800" />
+  <circle cx="100" cy="106" r="14" class="body" />
+  <circle cx="100" cy="106" r="6.5" class="dark" />
+  <circle cx="188" cy="106" r="14" class="body" />
+  <circle cx="188" cy="106" r="6.5" class="dark" />
 </svg>

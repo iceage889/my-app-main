@@ -116,7 +116,7 @@ async function sendStatusEmail(
       : "Your MovingPace booking has been cancelled",
     html: `
       <div style="font-family: Arial, sans-serif; color: #111; line-height: 1.6;">
-        <h2 style="color:#e11d2a;">${
+        <h2 style="color:#14213d;">${
           accepted ? "Booking confirmed" : "Booking cancelled"
         }</h2>
         <p>Hi ${escapeHtml(booking.name)},</p>
